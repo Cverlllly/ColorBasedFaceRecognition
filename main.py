@@ -26,7 +26,19 @@ def doloci_barvo_koze(slika, levo_zgoraj, desno_spodaj) -> tuple:
     '''Ta funkcija se kliče zgolj 1x na prvi sliki iz kamere.
     Vrne barvo kože v območju ki ga definira oklepajoča škatla (levo_zgoraj, desno_spodaj).
       Način izračuna je prepuščen vaši domišljiji.    '''
-    pass
+    b = 0
+    g = 0
+    r = 0
+    counter = 0
+    for i in range(levo_zgoraj[0], desno_spodaj[0]):
+        for j in range(levo_zgoraj[1], desno_spodaj[1]):
+            b += int(slika[j][i][0])
+            g += int(slika[j][i][1])
+            r += int(slika[j][i][2])
+            counter += 1
+
+    # print(int(b / counter), int(g / counter), int(r / counter))
+    return int(b / counter), int(g / counter), int(r / counter)
 
 def main():
     cam = cv.VideoCapture(0)
