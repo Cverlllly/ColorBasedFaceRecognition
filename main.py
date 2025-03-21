@@ -1,6 +1,7 @@
 import cv2 as cv
 import numpy as np
 
+VELIKOST_SKATLE=50
 
 def zmanjsaj_sliko(slika, sirina, visina):
     '''Zmanjšaj sliko na velikost sirina x visina.'''
@@ -68,6 +69,15 @@ def main():
             print("Can't receive frame (stream end?)")
             break
         frame = cv.flip(frame, 1)
+        # obdelava slike
+        for i in range(0, frame.shape[1], VELIKOST_SKATLE):
+            for j in range(0, frame.shape[0], VELIKOST_SKATLE):
+                enbox = frame[j:j + VELIKOST_SKATLE, i:i + VELIKOST_SKATLE]
+                piksli = prestej_piklse_z_barvo_koze(enbox, barva)
+                if piksli > int(VELIKOST_SKATLE * VELIKOST_SKATLE / 2):
+                    cv.rectangle(frame, (i, j), (i + VELIKOST_SKATLE, j + VELIKOST_SKATLE), (0, 255, 0), 1)
+                else:
+                    cv.rectangle(frame, (i, j), (i + VELIKOST_SKATLE, j + VELIKOST_SKATLE), (0, 0, 255), 1)
         cv.imshow('frame', frame)
         if cv.waitKey(1) == ord('q'):
             break
