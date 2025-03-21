@@ -1,7 +1,8 @@
 import cv2 as cv
 import numpy as np
 
-VELIKOST_SKATLE=50
+VELIKOST_SKATLE = 50
+
 
 def zmanjsaj_sliko(slika, sirina, visina):
     '''Zmanjšaj sliko na velikost sirina x visina.'''
@@ -11,6 +12,17 @@ def zmanjsaj_sliko(slika, sirina, visina):
 def izris_kvadrata(slika, levo_zgoraj, desno_spodaj):
     '''Izriše kvadrat na sliki z barvo barva.'''
     return cv.rectangle(slika, levo_zgoraj, desno_spodaj, (0, 255, 0), 2)
+
+
+def nared_skatle_na_sliki(slika, sirina_skatle, visina_skatle) -> list:
+    '''Naredi škatle na sliki.'''
+    skatle = []
+    for i in range(0, slika.shape[1], sirina_skatle):
+        for j in range(0, slika.shape[0], visina_skatle):
+            levo_zgoraj = (i, j)
+            desno_spodaj = (i + sirina_skatle, j + visina_skatle)
+            skatle.append((levo_zgoraj, desno_spodaj))
+    return skatle
 
 
 def obdelaj_sliko_s_skatlami(slika, sirina_skatle, visina_skatle, barva_koze) -> list:
