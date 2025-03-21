@@ -37,7 +37,18 @@ def obdelaj_sliko_s_skatlami(slika, sirina_skatle, visina_skatle, barva_koze) ->
 
 def prestej_piklse_z_barvo_koze(slika, barva_koze) -> int:
     '''Prestej število pikslov z barvo kože v škatli.'''
-    pass
+    counter = 0
+    scaler=25
+    for i in range(slika.shape[1]):
+        for j in range(slika.shape[0]):
+            upper = barva_koze[0] + scaler, barva_koze[1] + scaler, barva_koze[2] + scaler
+            lower = barva_koze[0] - scaler, barva_koze[1] - scaler, barva_koze[2] - scaler
+
+            if (slika[j][i][0] <= upper[0]) and (slika[j][i][0] >= lower[0]) and (slika[j][i][1] <= upper[1]) and (
+                    slika[j][i][1] >= lower[1]) and (slika[j][i][2] <= upper[2]) and (slika[j][i][2] >= lower[2]):
+                counter += 1
+
+    return counter
 
 
 def doloci_barvo_koze(slika, levo_zgoraj, desno_spodaj) -> tuple:
@@ -65,8 +76,8 @@ def main():
     ret, frame1 = cam.read()
     # doloci sredino slike
     sredina = (frame1.shape[1] // 2, frame1.shape[0] // 2)
-    x_10 = frame1.shape[0] / 7.5
-    y_10 = frame1.shape[1] / 7.5
+    x_10 = frame1.shape[0] / 6
+    y_10 = frame1.shape[1] / 6
     levo_zgoraj = (int(sredina[0] - x_10), int(sredina[1] - y_10))
     desno_spodaj = (int(sredina[0] + x_10), int(sredina[1] + y_10))
 
