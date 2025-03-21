@@ -4,7 +4,12 @@ import numpy as np
 
 def zmanjsaj_sliko(slika, sirina, visina):
     '''Zmanjšaj sliko na velikost sirina x visina.'''
-    pass
+    return cv.resize(slika, (sirina, visina))
+
+
+def izris_kvadrata(slika, levo_zgoraj, desno_spodaj):
+    '''Izriše kvadrat na sliki z barvo barva.'''
+    return cv.rectangle(slika, levo_zgoraj, desno_spodaj, (0, 255, 0), 2)
 
 
 def obdelaj_sliko_s_skatlami(slika, sirina_skatle, visina_skatle, barva_koze) -> list:
@@ -40,6 +45,7 @@ def doloci_barvo_koze(slika, levo_zgoraj, desno_spodaj) -> tuple:
     # print(int(b / counter), int(g / counter), int(r / counter))
     return int(b / counter), int(g / counter), int(r / counter)
 
+
 def main():
     cam = cv.VideoCapture(0)
     # prvi frame
@@ -50,8 +56,12 @@ def main():
     y_10 = frame1.shape[1] / 7.5
     levo_zgoraj = (int(sredina[0] - x_10), int(sredina[1] - y_10))
     desno_spodaj = (int(sredina[0] + x_10), int(sredina[1] + y_10))
-    barva_koze = doloci_barvo_koze(frame1, levo_zgoraj, desno_spodaj)
 
+    barva = doloci_barvo_koze(frame1, levo_zgoraj, desno_spodaj)
+
+    izris_kvadrata(frame1, levo_zgoraj, desno_spodaj)
+    frame1 = cv.flip(frame1, 1)
+    cv.imshow('frame1', frame1)
     while True:
         ret, frame = cam.read()
         if not ret:
@@ -62,6 +72,7 @@ def main():
         if cv.waitKey(1) == ord('q'):
             break
     cam.release()
+    cv.destroyAllWindows()
 
 
 if __name__ == '__main__':
