@@ -4,7 +4,7 @@ import numpy as np
 
 def zmanjsaj_sliko(slika, sirina, visina):
     '''Zmanjšaj sliko na velikost sirina x visina.'''
-    pass
+    return cv.resize(slika, (sirina, visina))
 
 
 def obdelaj_sliko_s_skatlami(slika, sirina_skatle, visina_skatle, barva_koze) -> list:
