@@ -25,11 +25,33 @@ def prestej_piklse_z_barvo_koze(slika, barva_koze) -> int:
 def doloci_barvo_koze(slika, levo_zgoraj, desno_spodaj) -> tuple:
     '''Ta funkcija se kliče zgolj 1x na prvi sliki iz kamere.
     Vrne barvo kože v območju ki ga definira oklepajoča škatla (levo_zgoraj, desno_spodaj).
-      Način izračuna je prepuščen vaši domišljiji.'''
-    pass
+      Način izračuna je prepuščen vaši domišljiji.    '''
+    b = 0
+    g = 0
+    r = 0
+    counter = 0
+    for i in range(levo_zgoraj[0], desno_spodaj[0]):
+        for j in range(levo_zgoraj[1], desno_spodaj[1]):
+            b += int(slika[j][i][0])
+            g += int(slika[j][i][1])
+            r += int(slika[j][i][2])
+            counter += 1
+
+    # print(int(b / counter), int(g / counter), int(r / counter))
+    return int(b / counter), int(g / counter), int(r / counter)
 
 def main():
     cam = cv.VideoCapture(0)
+    # prvi frame
+    ret, frame1 = cam.read()
+    # doloci sredino slike
+    sredina = (frame1.shape[1] // 2, frame1.shape[0] // 2)
+    x_10 = frame1.shape[0] / 7.5
+    y_10 = frame1.shape[1] / 7.5
+    levo_zgoraj = (int(sredina[0] - x_10), int(sredina[1] - y_10))
+    desno_spodaj = (int(sredina[0] + x_10), int(sredina[1] + y_10))
+    barva_koze = doloci_barvo_koze(frame1, levo_zgoraj, desno_spodaj)
+
     while True:
         ret, frame = cam.read()
         if not ret:
@@ -40,6 +62,7 @@ def main():
         if cv.waitKey(1) == ord('q'):
             break
     cam.release()
+
 
 if __name__ == '__main__':
     main()
