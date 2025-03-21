@@ -35,6 +35,7 @@ def main():
         if not ret:
             print("Can't receive frame (stream end?)")
             break
+        frame = cv.flip(frame, 1)
         cv.imshow('frame', frame)
         if cv.waitKey(1) == ord('q'):
             break
