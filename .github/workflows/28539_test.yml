@@ -38,10 +38,12 @@ jobs:
   izvedi-teste:
     needs: preveri-teste
     if: needs.preveri-teste.outputs.napaka_obstaja == 'false'
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
-        python-version: [3.12]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
     steps:
       - name: Checkout koda
         uses: actions/checkout@v4
@@ -55,13 +57,24 @@ jobs:
       - name: Prikaži napaka.txt
         run: cat ./artefakti/napaka.txt
 
-      - name: Namesti odvisnosti za Python ${{ matrix.python-version }}
+      - name: Namesti odvisnosti
         run: |
-          sudo apt update
-          sudo apt install -y python3-opencv python3-pip
-          python${{ matrix.python-version }} -m pip install --upgrade pip
-          python${{ matrix.python-version }} -m pip install -r requirements.txt
+          # Depending on the OS, install dependencies
+          if [[ $RUNNER_OS == 'Linux' ]]; then
+            sudo apt update
+            sudo apt install -y python3-opencv python3-pip
+            python3 -m pip install --upgrade pip
+            python3 -m pip install -r requirements.txt
+          elif [[ $RUNNER_OS == 'Windows' ]]; then
+            choco install python3
+            python -m pip install --upgrade pip
+            python -m pip install -r requirements.txt
+          elif [[ $RUNNER_OS == 'macOS' ]]; then
+            brew install python
+            python3 -m pip install --upgrade pip
+            python3 -m pip install -r requirements.txt
+          fi
 
-      - name: Zaženi teste za Python ${{ matrix.python-version }}
+      - name: Zaženi teste
         run: |
-          python${{ matrix.python-version }} -m unittest discover -s tests
+          python3 -m unittest discover -s tests
