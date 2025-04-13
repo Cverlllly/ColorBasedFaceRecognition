@@ -39,6 +39,9 @@ jobs:
     needs: preveri-teste
     if: needs.preveri-teste.outputs.napaka_obstaja == 'false'
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, 3.10]
 
     steps:
       - name: Checkout koda
@@ -53,12 +56,13 @@ jobs:
       - name: Prikaži napaka.txt
         run: cat ./artefakti/napaka.txt
 
-      - name: Namesti odvisnosti
+      - name: Namesti odvisnosti za Python ${{ matrix.python-version }}
         run: |
           sudo apt update
           sudo apt install -y python3-opencv python3-pip
-          pip install numpy
+          python${{ matrix.python-version }} -m pip install --upgrade pip
+          python${{ matrix.python-version }} -m pip install -r requirements.txt
 
-      - name: Zaženi teste
+      - name: Zaženi teste za Python ${{ matrix.python-version }}
         run: |
-          python3 -m unittest discover -s tests
+          python${{ matrix.python-version }} -m unittest discover -s tests
