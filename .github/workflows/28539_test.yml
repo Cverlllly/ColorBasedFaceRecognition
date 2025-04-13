@@ -1,0 +1,64 @@
+name: 28539 Test
+
+on:
+  push:
+    paths:
+      - '**.py'
+      - 'tests/**'
+      - '.github/workflows/28539_test.yml'
+  pull_request:
+
+jobs:
+  preveri-teste:
+    runs-on: ubuntu-latest
+    outputs:
+      napaka_obstaja: ${{ steps.preveri.outputs.napaka_obstaja }}
+
+    steps:
+      - name: Checkout koda
+        uses: actions/checkout@v3
+
+      - name: Preveri ali obstajajo testi
+        id: preveri
+        run: |
+          if ls tests/test_*.py > /dev/null 2>&1; then
+            echo "Testne skripte obstajajo." > napaka.txt
+            echo "napaka_obstaja=false" >> $GITHUB_OUTPUT
+          else
+            echo "Napaka: Ni testnih skript!" > napaka.txt
+            echo "napaka_obstaja=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Shrani napaka.txt kot artefakt
+        uses: actions/upload-artifact@v3
+        with:
+          name: napaka
+          path: napaka.txt
+
+  izvedi-teste:
+    needs: preveri-teste
+    if: needs.preveri-teste.outputs.napaka_obstaja == 'false'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout koda
+        uses: actions/checkout@v3
+
+      - name: Prenesi napaka.txt
+        uses: actions/download-artifact@v3
+        with:
+          name: napaka
+          path: ./artefakti
+
+      - name: Prikaži napaka.txt
+        run: cat ./artefakti/napaka.txt
+
+      - name: Namesti odvisnosti
+        run: |
+          sudo apt update
+          sudo apt install -y python3-opencv python3-pip
+          pip install numpy
+
+      - name: Zaženi teste
+        run: |
+          python3 -m unittest discover -s tests
