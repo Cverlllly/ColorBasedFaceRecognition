@@ -82,5 +82,4 @@ jobs:
       - name: Zaženi teste
         run: |
           python3 -m unittest discover -s tests || echo "Testi so se neuspešno končali"
-        continue-on-error: true
         shell: bash
