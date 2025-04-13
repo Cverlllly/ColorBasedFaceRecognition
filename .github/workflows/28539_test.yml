@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout koda
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Preveri ali obstajajo testi
         id: preveri
@@ -30,7 +30,7 @@ jobs:
           fi
 
       - name: Shrani napaka.txt kot artefakt
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: napaka
           path: napaka.txt
@@ -42,10 +42,10 @@ jobs:
 
     steps:
       - name: Checkout koda
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Prenesi napaka.txt
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: napaka
           path: ./artefakti
