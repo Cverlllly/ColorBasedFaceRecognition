@@ -2,7 +2,7 @@ name: 28539 Deploy
 
 on:
   workflow_run:
-    workflows: ["28539 Test"]  # Ime prve skripte
+    workflows: ["28539 Test"]
     types:
       - completed
 
